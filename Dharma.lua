@@ -162,7 +162,6 @@ function Dharma.Loop(wait)
 		end
 
 		if Dharma.screenUpdate then
-			Dharma.screenUpdate = nil
 
 			-- Call OnUpdate routines for drawing
 			for i, widget in pairs(widgets) do
@@ -173,6 +172,7 @@ function Dharma.Loop(wait)
 			end
 			
 			-- Send framebuffer
+			Dharma.screenUpdate = nil
 			screen.update()
 		end
 		if(wait and wait ~= true) then os.wait(wait) end

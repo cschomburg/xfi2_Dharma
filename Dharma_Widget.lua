@@ -52,15 +52,27 @@ function Widget:GrabButtons()
 end
 
 function Widget:EnableTouch(flag)
-	Widget.touchEnabled = flag
+	self.touchEnabled = flag
 end
 
 function Widget:SetHidden(flag)
 	Widget.hidden = flag
+	Dharma.screenUpdate = true
 end
 
 function Widget:SetDimensions(x, y, height, width)
 	self.x, self.y, self.width, self.height = x, y, height, width or height
+	Dharma.screenUpdate = true
+end
+
+function Widget:SetSize(height, width)
+	self.height, self.width = height, width or height
+	Dharma.screenUpdate = true
+end
+
+function Widget:SetPos(x, y)
+	self.x, self.y = x, y
+	Dharma.screenUpdate = true
 end
 
 
@@ -93,7 +105,7 @@ local Image = Dharma.NewClass("Image", "Widget")
 
 function Image:_draw()
 	if self.image then
-		self.image:draw(self.x, self.y, selfx+self.width, self.y+self.height)
+		self.image:draw(self.x, self.y, self.width, self.height)
 	end
 end
 
@@ -101,4 +113,40 @@ function Image:_new(path)
 	self._parent._new(self)
 	if path then self.image = image.load(path) end
 	return self
+end
+
+--[[*****************************
+	3. Text
+		A widget which displays text
+********************************]]
+
+local Text = Dharma.NewClass("Text", "Widget")
+Text.size = 20
+Text.color = color.new(255, 255, 255)
+Text.align = "left"
+
+function Text:_draw()
+	if self.text then
+		text.color(self.color)
+		text.size(self.size)
+		text.draw(self.x, self.y, self.text, self.align, self.width)
+	end
+end
+
+function Text:_new(msg, size, color, align)
+	self._parent._new(self)
+	self.text, self.size, self.color, self.align = msg, size, color, align
+	return self
+end
+
+function Text:SetText(msg, r,g,b,a)
+	if(r and g and b) then
+		self.color = color.new(r,g,b, a)
+	end
+	self.text = msg
+	Dharma.screenUpdate = true
+end
+
+function Text:SetFormattedText(msg, ...)
+	self:SetText(msg:format(...))
 end
