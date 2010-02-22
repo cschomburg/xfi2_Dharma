@@ -71,6 +71,14 @@ function Dharma.GetLastTouchPos()
 	return lX, lY
 end
 
+function Dharma.Color(r,g,b,a)
+	if(r and g and b) then
+		return color.new(r,g,b,a)
+	else
+		return r
+	end
+end
+
 --[[*****************************
 	2. Event Processing Loop
 ********************************]]

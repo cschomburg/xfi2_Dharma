@@ -60,13 +60,8 @@ function Widget:SetHidden(flag)
 	Dharma.screenUpdate = true
 end
 
-function Widget:SetDimensions(x, y, height, width)
-	self.x, self.y, self.width, self.height = x, y, height, width or height
-	Dharma.screenUpdate = true
-end
-
-function Widget:SetSize(height, width)
-	self.height, self.width = height, width or height
+function Widget:SetSize(width, height)
+	self.width, self.height = width, height or width
 	Dharma.screenUpdate = true
 end
 
@@ -85,14 +80,14 @@ end
 local Box = Dharma.NewClass("Box", "Widget")
 
 function Box:_draw()
-	if self.bgColor then
-		screen.fillrect(self.x, self.y, self.width, self.height, self.bgColor)
+	if self.color then
+		screen.fillrect(self.x, self.y, self.width, self.height, self.color)
 	end
 end
 
-function Box:_new(color)
+function Box:_new(...)
 	self._parent._new(self)
-	self.bgColor = color
+	self.color = Dharma.Color(...)
 	return self
 end
 
@@ -121,15 +116,15 @@ end
 ********************************]]
 
 local Text = Dharma.NewClass("Text", "Widget")
-Text.size = 20
 Text.color = color.new(255, 255, 255)
 Text.align = "left"
+Text.height = 20
 
 function Text:_draw()
 	if self.text then
 		text.color(self.color)
-		text.size(self.size)
-		text.draw(self.x, self.y, self.text, self.align, self.width)
+		text.size(self.height)
+		text.draw(self.x, self.y, self.text, self.align, self.alignWidth)
 	end
 end
 
@@ -139,14 +134,22 @@ function Text:_new(msg, size, color, align)
 	return self
 end
 
-function Text:SetText(msg, r,g,b,a)
-	if(r and g and b) then
-		self.color = color.new(r,g,b, a)
-	end
+function Text:SetText(msg, ...)
+	self.color = Dharma.Color(...) or self.color
 	self.text = msg
 	Dharma.screenUpdate = true
 end
 
 function Text:SetFormattedText(msg, ...)
 	self:SetText(msg:format(...))
+end
+
+function Text:SetAlign(align)
+	self.align = align
+	Dharma.screenUpdate = true
+end
+
+function Text:SetColor(...)
+	self.color = Dharma.Color(...)
+	Dharma.screenUpdate = true
 end

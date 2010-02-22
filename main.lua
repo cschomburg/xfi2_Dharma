@@ -6,7 +6,8 @@ local Background = new("Box", color.new(50, 50, 50))
 Background:EnableTouch(true)
 
 local Box = new("Image", "icon.png")
-Box:SetDimensions(100, 100, 50)
+Box:SetPos(100, 100)
+Box:SetSize(50)
 
 local Text = new("Text")
 Text:SetPos(5, 5)
