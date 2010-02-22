@@ -1,4 +1,4 @@
-require "Dharma_Widget"
+require "Dharma/core"
 
 local new = Dharma.New
 

@@ -3,8 +3,8 @@
     Dharma: A Framework for Creative Zen X-Fi 2 Applications
 
     Copyright (C) 2010  Constantin Schomburg <xconstruct@gmail.com>
-	
-	This file is part of Dharma.
+
+    This file is part of Dharma.
 
     Dharma is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,14 +26,29 @@ Dharma = Dharma or {}
 	1. Core Functions
 ********************************]]
 
+local dharmaFiles = {
+	Widget = "widget",
+	Box = "w_box",
+	Image = "w_image",
+	Text = "w_text",
+}
+
 local closed
 local touchDown, homeDown, powerDown
 local lX, lY, x, y
 
 local widgets, classes = {}, {}
 
+local function dRequire(name)
+	if(dharmaFiles[name]) then
+		require("Dharma/"..dharmaFiles[name])
+	end
+end
+
 function Dharma.NewClass(name, parent)
-	parent = type(parent) == "string" and classes[parent] or parent
+	if(parent and not classes[parent]) then dRequire(parent) end
+	parent = classes[parent]
+
 	local prototype = parent and setmetatable({}, parent) or {}
 	prototype.__index = prototype
 	prototype._parent = parent or Dharma
@@ -42,6 +57,8 @@ function Dharma.NewClass(name, parent)
 end
 
 function Dharma.New(name, ...)
+	if(not classes[name]) then dRequire(name) end
+
 	local class = classes[name]
 	local widget = setmetatable({}, class)
 	return widget:_new(...)
