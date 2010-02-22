@@ -9,7 +9,7 @@ local Box = new("Image", "icon.png")
 Box:SetPos(100, 100)
 Box:SetSize(50)
 
-local Text = new("Text")
+local Text = new("Text", "X, Y")
 Text:SetPos(5, 5)
 
 function Background:OnTouchMove(x, y)

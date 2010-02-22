@@ -33,6 +33,11 @@ function Box:_draw()
 	end
 end
 
+function Box:SetColor(...)
+	self.color = Dharma.Color(...)
+	Dharma.screenUpdate = true
+end
+
 function Box:_new(...)
 	self._parent._new(self)
 	self.color = Dharma.Color(...)

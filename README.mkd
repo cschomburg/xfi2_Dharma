@@ -1,0 +1,238 @@
+Dharma
+======
+
+A Framework for Creative Zen X-Fi 2 Applications.
+It provides an object-oriented approach to the Lua environment by directing all events and drawing of frames.
+
+
+
+
+
+Installation
+------------
+
+Place the whole 'Dharma'-folder into the directory of your application.
+You can now load Dharma by using
+	require "Dharma/core"
+
+Dharma will load additional files when they are needed.
+
+
+
+
+
+Examples
+--------
+
+A basic example which prints a red text with your touch coordinates:
+	require "Dharma/core"
+
+	local myBackground = Dharma.New("Box", 0, 0, 0)
+	myBackground:EnableTouch(true)
+
+	local myText = Dharma.New("Text", "Coordinates")
+	myText:SetPos(50, 50)
+
+	function myBackground:OnTouchClick(x, y)
+		myText:SetText("X: "..x..", Y:"..y, 255, 0, 0)
+	end
+
+	Dharma.Loop()
+
+By default, Dharma binds Exit() directly to your Home-Button to prevent you from locking in yourself. ;-)
+You can, of course, overwrite this behaviour, just let your widget :GrabButtons()
+
+
+
+
+Events
+------
+
+Dharma works by calling different functions for all the user actions. You can specify each of this functions in your widget.
+Note that your widget function is only triggered if the action happens directly on your widget
+
+*	:OnDraw() - Dharma wants you to redraw your widget
+
+*	:OnTouchUp(x, y) - The user releases the touchscreen
+*	:OnTouchDown(x, y) - The user presses the touchscreen
+*	:OnTouchHold(x, y) - The user holds the touchscreen
+*	:OnTouchMove(x, y) - The user moves on the touchscreen
+*	:OnTouchClick(x, y) - The user 'clicks' the touchscreen
+
+*	:OnHomeClick() - The user clicks the 'Home' key
+*	:OnHomeDown() - The user presses the 'Home' key
+*	:OnHomeUp() - The user releases the 'Home' key
+*	:OnHomeHold() - The user holds the 'Home' key
+
+*	:OnPowerClick() - The user clicks the 'Power' key
+*	:OnPowerDown() - The user presses the 'Power' key
+*	:OnPowerUp() - The user releases the 'Power' key
+*	:OnPowerHold() - The user holds the 'Power' key
+
+
+Dharma Core API
+---------------
+
+### widget = Dharma.New(class, ...) ###
+Creates a new widget of the type 'class'
+
+*	class: string which holds the widget class type
+*	...: additional options for the widget
+*	widget: the newly created widget
+
+### Dharma.Exit() ###
+Exits the current loop, in most cases closing the application
+
+### bool Dharma.IsTouchDown() ###
+Returns whether the touchscreen is currently pressed
+
+### bool Dharma.IsHomeDown() ###
+Returns whether the home key is currently pressed
+
+### bool Dharma.IsPowerDown() ###
+Returns whether the power key is currently pressed
+
+### x, y =  Dharma.GetLastTouchPos() ###
+Returns the last position from the touch screen
+
+*	x: number holding the x-coordinate
+*	y: number holding the y-coordinate
+
+### color =  Dharma.Color(r, g, b [, a]) ###
+### color =  Dharma.Color(color) ###
+Wrapper for passing a direct color or single values
+
+*	r,g,b: numbers holding red, green and blue values (1-255)
+*	a: alpha-value (optional)
+*	color: a color table
+
+### Dharma.Loop( [wait] ) ###
+Starts the event loop, effectively executing your application
+
+*	Wait: number of milliseconds Dharma should wait before a new cycle. If not specified, it will wait until the next event.
+
+The event loop is the heart of Dharma.
+It fetches all events and directs them to your widgets and initializes the drawing routines for all elements.
+
+### Dharma.screenUpdate = true ###
+Schedule a redrawing of all widgets at the end of the loop
+
+
+
+
+
+Base Widget
+-----------
+The simplest and most fundamental of all Dharma Widgets. It provides basic functions such as size, position and event handling.
+	
+
+### Widget() ###
+The constructor. No options this time.
+
+### bool Widget:Contains(x, y) ###
+Returns whether the widget contains the coordinates
+
+*	x: number holding the x-coordinate
+*	y: number holding the y-coordinate
+
+### bool Widget:Intersects(other) ###
+Returns whether the widget intersects another one
+
+*	other: widget to check for
+
+### Widget:GrabButtons() ###
+The widget is in control of the buttons and handles their events. Don't forget to provide an Exit() option!
+
+### Widget:EnableTouch(bool) ###
+Enables or disables the widget receiving touch events
+
+*	bool: true enables and nil disables it
+
+### Widget:SetHidden(bool) ###
+Hides or shows the widget
+
+*	bool: true hides and nil shows it
+
+### Widget:SetSize(width [, height]) ###
+Modifies the size of the widget
+
+*	width: number holding the width
+*	height: number holding the height; if neglected, it gets the same value as width (optional)
+
+### Widget:SetPos(x, y) ###
+Modifies the position of the widget
+
+*	x: number holding the new x-coordinate
+*	y: number holding the new y-coordinate
+
+
+
+
+
+Box Widget
+----------
+A widget which consists of a simple colored background
+
+### Box([color]) ###
+Specify a background color when you create your widget
+
+*	color: a color table or rgba-values (optional)
+
+### Box:SetColor(r, g, b [, a]) ###
+### Box:SetColor(color) ###
+Sets the background color of the box
+
+*	r,g,b: numbers holding red, green and blue values (1-255)
+*	a: alpha-value (optional)
+*	color: a color table
+
+
+
+
+
+Image Widget
+----------
+A widget which displays an image
+
+### Image([path]) ###
+Creates an image with the specified file path.
+
+
+
+
+
+Text Widget
+----------
+A widget which displays a colored text
+
+### Text([msg, size, color, align]) ###
+Creates a text with the options.
+
+*	msg: string holding the initial text message (optional)
+*	size: number holding the height in pixels (default: 20)
+*	color: the text color (default: white)
+*	align: either "left", "center" or "right" (default: "left")
+
+### Text:SetColor(r, g, b [, a]) ###
+### Text:SetColor(color) ###
+Sets the color of the text.
+
+*	r,g,b: numbers holding red, green and blue values (1-255)
+*	a: alpha-value (optional)
+*	color: a color table
+
+### Text:SetText(msg [, color]) ###
+Change the current text to 'msg' and optionally color it
+
+*	color: a color table or rgba-values (optional)
+
+### Text:SetFormattedText(msg, ...) ###
+Uses format() on the message before setting it as the new text
+
+*	msg: The format string
+*	...: Format arguments
+
+### Text:SetAlign(align) ###
+Sets the align of the text
+
+*	align: either "left", "center" or "right" (default: "left")

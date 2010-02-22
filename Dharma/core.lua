@@ -90,7 +90,7 @@ end
 
 function Dharma.Color(r,g,b,a)
 	if(r and g and b) then
-		return color.new(r,g,b,a)
+		return a and color.new(r,g,b,a) or color.new(r,g,b)
 	else
 		return r
 	end
