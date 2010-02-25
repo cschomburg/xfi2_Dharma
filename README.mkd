@@ -100,11 +100,13 @@ Returns the last position from the touch screen
 
 ### color =  Dharma.Color(r, g, b [, a]) ###
 ### color =  Dharma.Color(color) ###
+### color =  Dharma.Color(colorString) ###
 Wrapper for passing a direct color or single values
 
 *	r,g,b: numbers holding red, green and blue values (1-255)
 *	a: alpha-value (optional)
 *	color: a color table
+*	colorString: a html color code such as "red"
 
 ### Dharma.Loop( [wait] ) ###
 Starts the event loop, effectively executing your application
@@ -140,16 +142,25 @@ Returns whether the widget intersects another one
 
 *	other: widget to check for
 
+### Widget:Destroy() ###
+Destroys this widget
+
 ### Widget:GrabButtons() ###
 The widget is in control of the buttons and handles their events. Don't forget to provide an Exit() option!
 
-### Widget:EnableTouch(bool) ###
+### Widget:EnableTouch(touchFlag, focusFlag) ###
 Enables or disables the widget receiving touch events
 
-*	bool: true enables and nil disables it
+*	touchFlag: receive touch events
+*	focusFlag: redirect all move- and down-events to this widget when it is selected
+
+### Widget:SetParent(widget) ###
+Set the parent widget, making position relative to it
+
+*	widget: another widget
 
 ### Widget:SetHidden(bool) ###
-Hides or shows the widget
+Hides or shows the widget, effectively hiding all children
 
 *	bool: true hides and nil shows it
 
@@ -160,10 +171,16 @@ Modifies the size of the widget
 *	height: number holding the height; if neglected, it gets the same value as width (optional)
 
 ### Widget:SetPos(x, y) ###
-Modifies the position of the widget
+Modifies the position of the widget, relative to its parent
 
 *	x: number holding the new x-coordinate
 *	y: number holding the new y-coordinate
+
+### Widget:GetScreenPos() ###
+Returns the absolute screen position of the widget
+
+*	x: number holding the x-coordinate
+*	y: number holding the y-coordinate
 
 
 
@@ -173,18 +190,15 @@ Box Widget
 ----------
 A widget which consists of a simple colored background
 
-### Box([color]) ###
+### Box([colorValue]) ###
 Specify a background color when you create your widget
 
-*	color: a color table or rgba-values (optional)
+*	colorValue: See Dharma.Color() for details
 
-### Box:SetColor(r, g, b [, a]) ###
-### Box:SetColor(color) ###
+### Box:SetColor(colorValue) ###
 Sets the background color of the box
 
-*	r,g,b: numbers holding red, green and blue values (1-255)
-*	a: alpha-value (optional)
-*	color: a color table
+*	colorValue: See Dharma.Color() for details
 
 
 
@@ -202,29 +216,26 @@ Creates an image with the specified file path.
 
 
 Text Widget
-----------
+-----------
 A widget which displays a colored text
 
-### Text([msg, size, color, align]) ###
+### Text([msg, size, colorValue, align]) ###
 Creates a text with the options.
 
 *	msg: string holding the initial text message (optional)
 *	size: number holding the height in pixels (default: 20)
-*	color: the text color (default: white)
+*	colorValue: See Dharma.Color() for details
 *	align: either "left", "center" or "right" (default: "left")
 
-### Text:SetColor(r, g, b [, a]) ###
-### Text:SetColor(color) ###
+### Text:SetColor(colorValue) ###
 Sets the color of the text.
 
-*	r,g,b: numbers holding red, green and blue values (1-255)
-*	a: alpha-value (optional)
-*	color: a color table
+*	colorValue: See Dharma.Color() for details
 
-### Text:SetText(msg [, color]) ###
+### Text:SetText(msg [, colorValue]) ###
 Change the current text to 'msg' and optionally color it
 
-*	color: a color table or rgba-values (optional)
+*	colorValue: See Dharma.Color() for details
 
 ### Text:SetFormattedText(msg, ...) ###
 Uses format() on the message before setting it as the new text
@@ -236,3 +247,26 @@ Uses format() on the message before setting it as the new text
 Sets the align of the text
 
 *	align: either "left", "center" or "right" (default: "left")
+
+
+
+
+
+Profiler
+--------
+The profiler measures the times for different functions and reports them in the display
+
+### Profiler.Start() ###
+Starts the time capture
+
+### Profiler.Stop(name, highest) ###
+Measures the time and stores it for the point "name"
+
+*	name: string holding the name of the measuring point
+*	highest: if true, it stores only the highest value
+
+### Profiler.Output(x, y) ###
+Outputs the measurements to the display
+
+*	x: number holding the x-coordinate
+*	y: number holding the y-coordinate
