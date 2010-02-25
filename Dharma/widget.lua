@@ -48,11 +48,19 @@ function Widget:Destroy()
 end
 
 function Widget:Contains(x, y)
-	return (x >= self.x) and (x <= self.x + self.width) and (y >= self.y) and (y <= self.y + self.height)
+	local wX, wY = self:GetScreenPos()
+	return (x >= wX) and (x <= wX + self.width) and (y >= wY) and (y <= wY + self.height)
 end
 
 function Widget:Intersects(widget)
-	return (self.x < widget.x + widget.width) and (widget.x < self.x + self.width) and (self.y < widget.y + widget.width) and (self.y + self.width < self.y)
+	local x, y = self:GetScreenPos()
+	local wX, wY = widget:GetScreenPos()
+	return (x < wX + widget.width) and (wX < x + self.width) and (y < wY + widget.height) and (wY < y + self.height)
+end
+
+function Widget:SetParent(parent)
+	self.parent = parent
+	Dharma.screenUpdate = true
 end
 
 function Widget:GrabButtons()
@@ -76,4 +84,10 @@ end
 function Widget:SetPos(x, y)
 	self.x, self.y = x, y
 	Dharma.screenUpdate = true
+end
+
+function Widget:GetScreenPos()
+	if(not self.parent) then return self.x, self.y end
+	local x, y = self.parent:GetScreenPos()
+	return self.x + x, self.y + y
 end

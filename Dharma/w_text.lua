@@ -34,7 +34,8 @@ function Text:_draw()
 	if(self.text) then
 		text.color(self.color)
 		text.size(self.height)
-		text.draw(self.x, self.y, self.text, self.align, self.alignWidth)
+		local x,y = self:GetScreenPos()
+		text.draw(x, y, self.text, self.align, self.width)
 	end
 end
 

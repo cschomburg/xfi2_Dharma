@@ -27,6 +27,9 @@ Dharma = Dharma or {}
 ********************************]]
 
 local dharmaFiles = {
+	Profiler = "profiler",
+	Colors = "colors",
+
 	Widget = "widget",
 	Box = "w_box",
 	Image = "w_image",
