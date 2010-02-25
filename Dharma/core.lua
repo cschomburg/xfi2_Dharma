@@ -104,6 +104,8 @@ end
 function Dharma.Color(r,g,b,a)
 	if(r and g and b) then
 		return a and color.new(r,g,b,a) or color.new(r,g,b)
+	elseif(type(r) == "string") then
+		return Dharma.Colors[r]
 	else
 		return r
 	end
