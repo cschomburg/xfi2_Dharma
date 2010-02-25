@@ -39,6 +39,14 @@ function Widget:_new()
 	return widget
 end
 
+function Widget:Destroy()
+	for k, v in pairs(Dharma.Widgets) do
+		if(v == self) then
+			return tremove(Dharma.Widgets, k)
+		end
+	end
+end
+
 function Widget:Contains(x, y)
 	return (x >= self.x) and (x <= self.x + self.width) and (y >= self.y) and (y <= self.y + self.height)
 end
@@ -51,8 +59,8 @@ function Widget:GrabButtons()
 	Dharma.Focus = self
 end
 
-function Widget:EnableTouch(flag)
-	self.touchEnabled = flag
+function Widget:EnableTouch(touch, focus)
+	self.touchEnabled, self.focusEnabled = touch, focus
 end
 
 function Widget:SetHidden(flag)

@@ -37,12 +37,17 @@ local closed
 local touchDown, homeDown, powerDown
 local lX, lY, x, y
 
-local widgets, classes = {}, setmetatable({}, {__index = function(self, name)
+local widgets, classes = {}, {}
+
+mt_load = {__index = function(self, name)
 	if(dharmaFiles[name]) then
 		require("Dharma/"..dharmaFiles[name])
 		return rawget(self, name)
 	end
-end})
+end}
+
+setmetatable(Dharma, mt_load)
+setmetatable(classes, mt_load)
 
 function Dharma.NewClass(name, parent)
 	parent = classes[parent]
@@ -109,25 +114,32 @@ local function safeCall(tbl, event, ...)
 	return tbl[event] and tbl[event](tbl, ...)
 end
 
+local function widgetTouchEvent(widget)
+	if(touch.up() == 1) then
+		safeCall(widget, "OnTouchUp", x, y)
+		tDown = nil
+	elseif(touch.down() == 1) then
+		safeCall(widget, "OnTouchDown", x, y)
+		tDown = widget
+	elseif(touch.hold() == 1) then
+		safeCall(widget, "OnTouchHold", x, y)
+	elseif(touch.move() == 1) then
+		safeCall(widget, "OnTouchMove", x, y)
+	elseif(touch.click() == 1) then
+		safeCall(widget, "OnTouchClick", x, y)
+	end
+end
+
 local function touchEvent()
 	lX, lY, x, y = x, y, touch.pos()
+	if(tDown and tDown.focusEnabled) then
+		return widgetTouchEvent(tDown)
+	end
+
 	for i = #widgets, 1, -1 do
 		local widget = widgets[i]
 		if(widget.touchEnabled and not widget.hidden and widget:Contains(x, y)) then
-			if(touch.up() == 1) then
-				safeCall(widget, "OnTouchUp", x, y)
-				tDown = nil
-			elseif(touch.down() == 1) then
-				safeCall(widget, "OnTouchDown", x, y)
-				tDown = true
-			elseif(touch.hold() == 1) then
-				safeCall(widget, "OnTouchHold", x, y)
-			elseif(touch.move() == 1) then
-				safeCall(widget, "OnTouchMove", x, y)
-			elseif(touch.click() == 1) then
-				safeCall(widget, "OnTouchClick", x, y)
-			end
-			return true
+			return widgetTouchEvent(widget)
 		end
 	end
 end
