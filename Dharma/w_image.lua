@@ -28,7 +28,7 @@
 local Image = Dharma.NewClass("Image", "Widget")
 
 function Image:_draw()
-	if self.image then
+	if(self.image) then
 		self.image:draw(self.x, self.y, self.width, self.height)
 	end
 end

@@ -28,7 +28,7 @@
 local Box = Dharma.NewClass("Box", "Widget")
 
 function Box:_draw()
-	if self.color then
+	if(self.color) then
 		screen.fillrect(self.x, self.y, self.width, self.height, self.color)
 	end
 end

@@ -32,6 +32,8 @@ Widget.y = 0
 Widget.width = screen.width()
 Widget.height = screen.height()
 
+Widget.IsClass = Dharma.IsClass
+
 function Widget:_new()
 	table.insert(Dharma.Widgets, self)
 	return widget

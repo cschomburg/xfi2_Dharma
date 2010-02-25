@@ -31,7 +31,7 @@ Text.align = "left"
 Text.height = 20
 
 function Text:_draw()
-	if self.text then
+	if(self.text) then
 		text.color(self.color)
 		text.size(self.height)
 		text.draw(self.x, self.y, self.text, self.align, self.alignWidth)

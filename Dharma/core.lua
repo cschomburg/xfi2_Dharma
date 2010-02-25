@@ -37,31 +37,36 @@ local closed
 local touchDown, homeDown, powerDown
 local lX, lY, x, y
 
-local widgets, classes = {}, {}
-
-local function dRequire(name)
+local widgets, classes = {}, setmetatable({}, {__index = function(self, name)
 	if(dharmaFiles[name]) then
 		require("Dharma/"..dharmaFiles[name])
+		return rawget(self, name)
 	end
-end
+end})
 
 function Dharma.NewClass(name, parent)
-	if(parent and not classes[parent]) then dRequire(parent) end
 	parent = classes[parent]
 
 	local prototype = parent and setmetatable({}, parent) or {}
 	prototype.__index = prototype
+	prototype.class = name
 	classes[name] = prototype
 	return prototype
 end
 
 function Dharma.New(name, ...)
-	if(not classes[name]) then dRequire(name) end
-
 	local class = classes[name]
 	local widget = setmetatable({}, class)
 	widget:_new(...)
 	return widget
+end
+
+function Dharma.IsClass(object, name)
+	while(true) do
+		if(not object or not object.class) then return end
+		if(object.class == class) then return true end
+		object = getmetatable(object)
+	end
 end
 
 -- Exit the event loop
@@ -108,18 +113,18 @@ local function touchEvent()
 	lX, lY, x, y = x, y, touch.pos()
 	for i = #widgets, 1, -1 do
 		local widget = widgets[i]
-		if widget.touchEnabled and not widget.hidden and widget:Contains(x, y) then
-			if touch.up() == 1 then
+		if(widget.touchEnabled and not widget.hidden and widget:Contains(x, y)) then
+			if(touch.up() == 1) then
 				safeCall(widget, "OnTouchUp", x, y)
 				tDown = nil
-			elseif touch.down() == 1 then
+			elseif(touch.down() == 1) then
 				safeCall(widget, "OnTouchDown", x, y)
 				tDown = true
-			elseif touch.hold() == 1 then
+			elseif(touch.hold() == 1) then
 				safeCall(widget, "OnTouchHold", x, y)
-			elseif touch.move() == 1 then
+			elseif(touch.move() == 1) then
 				safeCall(widget, "OnTouchMove", x, y)
-			elseif touch.click() == 1 then
+			elseif(touch.click() == 1) then
 				safeCall(widget, "OnTouchClick", x, y)
 			end
 			return true
@@ -131,32 +136,32 @@ local function buttonEvent()
 	if(not Dharma.Focus) then return end
 	local focus = Dharma.Focus
 	
-	if button.click() == 1 then
-		if button.home() == 1 then
+	if(button.click() == 1) then
+		if(button.home() == 1) then
 			homeDown = nil
 			safeCall(focus, "OnHomeClick")
-		elseif button.power() == 1 then
+		elseif(button.power() == 1) then
 			powerDown = nil
 			safeCall(focus, "OnPowerClick")
 		end
-	elseif button.up() == 1 then
-		if button.home() == 1 then
+	elseif(button.up() == 1) then
+		if(button.home() == 1) then
 			homeDown = nil
 			safeCall(focus, "OnHomeUp")
-		elseif button.power() == 1 then
+		elseif(button.power() == 1) then
 			powerDown = nil
 			safeCall(focus, "OnPowerUp")
 		end
-	elseif button.hold() then
-		if button.home() == 1 then
-			if homeDown then
+	elseif(button.hold()) then
+		if(button.home() == 1) then
+			if(homeDown) then
 				safeCall(focus, "OnHomeHold")
 			else
 				homeDown = true
 				safeCall(focus, "OnHomeDown")
 			end
-		elseif button.power() == 1 and not powerDown then
-			if powerDown then
+		elseif(button.power() == 1 and not powerDown) then
+			if(powerDown) then
 				safeCall(focus, "OnPowerHold")
 			else
 				powerDown = true
@@ -176,17 +181,17 @@ function Dharma.Loop(wait)
 	repeat
 
 		-- Event checks
-		if control.read(wait == true and 1 or nil) == 1 then
-			if control.isButton() == 1 then
+		if(control.read(wait == true and 1 or nil) == 1) then
+			if(control.isButton() == 1) then
 				buttonEvent()
-			elseif control.isTouch() == 1 then
+			elseif(control.isTouch() == 1) then
 				touchEvent()
-			elseif control.isSensor() == 1 then
+			elseif(control.isSensor() == 1) then
 				sensorEvent()
 			end
 		end
 
-		if Dharma.screenUpdate then
+		if(Dharma.screenUpdate) then
 			-- Call OnUpdate routines for drawing
 			for i, widget in pairs(widgets) do
 				if not widget.hidden then
