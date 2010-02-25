@@ -51,7 +51,6 @@ function Dharma.NewClass(name, parent)
 
 	local prototype = parent and setmetatable({}, parent) or {}
 	prototype.__index = prototype
-	prototype._parent = parent or Dharma
 	classes[name] = prototype
 	return prototype
 end
@@ -61,7 +60,8 @@ function Dharma.New(name, ...)
 
 	local class = classes[name]
 	local widget = setmetatable({}, class)
-	return widget:_new(...)
+	widget:_new(...)
+	return widget
 end
 
 -- Exit the event loop
@@ -187,7 +187,6 @@ function Dharma.Loop(wait)
 		end
 
 		if Dharma.screenUpdate then
-
 			-- Call OnUpdate routines for drawing
 			for i, widget in pairs(widgets) do
 				if not widget.hidden then
@@ -195,7 +194,7 @@ function Dharma.Loop(wait)
 					safeCall(widget, "OnDraw")
 				end
 			end
-			
+
 			-- Send framebuffer
 			Dharma.screenUpdate = nil
 			screen.update()

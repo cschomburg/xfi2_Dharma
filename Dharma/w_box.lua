@@ -39,7 +39,6 @@ function Box:SetColor(...)
 end
 
 function Box:_new(...)
-	self._parent._new(self)
+	Dharma.Classes.Widget._new(self)
 	self.color = Dharma.Color(...)
-	return self
 end

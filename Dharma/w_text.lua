@@ -39,7 +39,7 @@ function Text:_draw()
 end
 
 function Text:_new(msg, size, color, align)
-	self._parent._new(self)
+	Dharma.Classes.Widget._new(self)
 	self.text, self.size, self.color, self.align = msg, size, color, align
 	return self
 end

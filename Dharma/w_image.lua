@@ -34,7 +34,7 @@ function Image:_draw()
 end
 
 function Image:_new(path)
-	self._parent._new(self)
+	Dharma.Classes.Widget._new(self)
 	if path then self.image = image.load(path) end
 	return self
 end
