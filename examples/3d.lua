@@ -51,8 +51,12 @@ local function WorldToScreen(x, y, z)
 	local screenX = (cX - eX) * (eY/cY) * screenWidth/2 + screenWidth/2
 	local screenY = (cZ - eZ) * (eY/cY) * screenWidth/2 + screenHeight/2
 
-	return cY < 0, screenX, screenY
+	return screenX, screenY, cY < 0
 end
+
+
+
+
 
 --[[##########################
 	Simple Objects
@@ -60,8 +64,8 @@ end
 
 -- Draws a line from (sX, sY, sZ) to (fX, fY, fZ)
 function createLine(sX, sY, sZ, fX, fY, fZ, color)
-	local vis1, x1, y1 = WorldToScreen(sX, sY, sZ)
-	local vis2, x2, y2 = WorldToScreen(fX, fY, fZ)
+	local x1, y1, vis1 = WorldToScreen(sX, sY, sZ)
+	local x2, y2, vis2 = WorldToScreen(fX, fY, fZ)
 
 	if(vis1 and vis2) then
 		screen.drawline(x1, y1, x2, y2, color)
@@ -88,26 +92,21 @@ function createCube(x, y, z, xW, yW, zW, color)
 	createLine(x+xW, y+yW, z-zW, x+xW, y+yW, z+zW, color)
 end
 
+
+
+
 --[[##########################
 	Dharma magic
-		My GUI framework - not necessary, but helpful
+		My GUI framework
+		not necessary, but helpful
 ############################]]
 
--- Loading
+-- Loading the library
 require "Dharma/core"
 
 -- The background widget, handling all events
 local BoxScreen = Dharma.New("Box", "black")
 BoxScreen:EnableTouch(true, true)
-
-local xText = Dharma.New("Text", "X", 12, "red")
-xText:SetPos(select(2, WorldToScreen(1, 0, 0)))
-
-local yText = Dharma.New("Text", "Y", 12, "lime")
-yText:SetPos(select(2, WorldToScreen(0, 1, 0)))
-
-local zText = Dharma.New("Text", "Z", 12, "yellow")
-zText:SetPos(select(2, WorldToScreen(0, 1, 0)))
 
 -- Rotate the camera with touchscreen
 function BoxScreen:OnTouchMove(x, y)
@@ -116,10 +115,6 @@ function BoxScreen:OnTouchMove(x, y)
 	camYaw = camYaw + (lX-x) * 0.5
 	camPitch = camPitch - (lY-y) * 0.5
 	Precalculate()
-
-	xText:SetPos(select(2, WorldToScreen(1, 0, 0)))
-	yText:SetPos(select(2, WorldToScreen(0, 1, 0)))
-	zText:SetPos(select(2, WorldToScreen(0, 0, 1)))
 
 	Dharma.screenUpdate = true
 end
@@ -138,6 +133,34 @@ function BoxScreen:OnDraw()
 
 	createCube(3, 0, 0, 0.5, 0.5, 0.5, darkGray)
 end
+
+
+
+
+--[[##########################
+	3D Text
+		A Dharma text widget
+		with 3D coordinates
+############################]]
+
+-- Create the class, inheriting from Text
+local Text3D = Dharma.NewClass("Text3D", "Text")
+
+-- The new draw-function
+function Text3D:_draw()
+	self.x, self.y = WorldToScreen(self.wX, self.wY, self.wZ)
+	Dharma.Classes.Text._draw(self)
+end
+
+-- Function for setting coordinates
+function Text3D:SetWorldPos(x, y, z)
+	self.wX, self.wY, self.wZ = x, y, z
+end
+
+-- Create three instances, one for each axis
+Dharma.New("Text3D", "X", 12, "red"):SetWorldPos(1, 0, 0)
+Dharma.New("Text3D", "Y", 12, "lime"):SetWorldPos(0, 1, 0)
+Dharma.New("Text3D", "Z", 12, "yellow"):SetWorldPos(0, 0, 1)
 
 -- Start the event loop
 Dharma.Loop(10)
