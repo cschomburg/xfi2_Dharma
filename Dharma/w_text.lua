@@ -41,7 +41,7 @@ end
 
 function Text:_new(msg, size, color, align)
 	Dharma.Classes.Widget._new(self)
-	self.text, self.size, self.color, self.align = msg, size, color, align
+	self.text, self.height, self.color, self.align = msg, size, Dharma.Color(color), align
 	return self
 end
 
