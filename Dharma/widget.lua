@@ -76,6 +76,10 @@ function Widget:SetHidden(flag)
 	Dharma.screenUpdate = true
 end
 
+function Widget:IsHidden()
+	return self.hidden or (self.parent and self.parent:IsHidden())
+end
+
 function Widget:SetSize(width, height)
 	self.width, self.height = width, height or width
 	Dharma.screenUpdate = true

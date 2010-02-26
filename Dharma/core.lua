@@ -143,7 +143,7 @@ local function touchEvent()
 
 	for i = #widgets, 1, -1 do
 		local widget = widgets[i]
-		if(widget.touchEnabled and not widget.hidden and widget:Contains(x, y)) then
+		if(widget.touchEnabled and not widget:IsHidden() and widget:Contains(x, y)) then
 			return widgetTouchEvent(widget)
 		end
 	end
@@ -211,7 +211,7 @@ function Dharma.Loop(wait)
 		if(Dharma.screenUpdate) then
 			-- Call OnUpdate routines for drawing
 			for i, widget in pairs(widgets) do
-				if not widget.hidden then
+				if(not widget:IsHidden()) then
 					safeCall(widget, "_draw")
 					safeCall(widget, "OnDraw")
 				end
