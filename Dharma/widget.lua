@@ -72,7 +72,7 @@ function Widget:EnableTouch(touch, focus)
 end
 
 function Widget:SetHidden(flag)
-	Widget.hidden = flag
+	self.hidden = flag
 	Dharma.screenUpdate = true
 end
 
