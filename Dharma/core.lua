@@ -208,6 +208,13 @@ function Dharma.Loop(wait)
 			end
 		end
 
+		for i, widget in pairs(widgets) do
+			if(not widget:IsHidden()) then
+				safeCall(widget, "_think")
+				safeCall(widget, "OnThink")
+			end
+		end
+
 		if(Dharma.screenUpdate) then
 			-- Call OnUpdate routines for drawing
 			for i, widget in pairs(widgets) do
