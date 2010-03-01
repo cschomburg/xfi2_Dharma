@@ -27,7 +27,7 @@
 
 local Image = Dharma.NewClass("Image", "Widget")
 
-function Image:_draw()
+function Image:OnDraw()
 	if(self.image) then
 		self.image:draw(self.x, self.y, self.width, self.height)
 	end

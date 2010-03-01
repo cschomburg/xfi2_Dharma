@@ -30,7 +30,8 @@ Text.color = color.new(255, 255, 255)
 Text.align = "left"
 Text.height = 20
 
-function Text:_draw()
+function Text:OnDraw()
+	Dharma.Classes.Widget.OnDraw(self)
 	if(self.text) then
 		text.color(self.color)
 		text.size(self.height)
@@ -48,7 +49,7 @@ end
 function Text:SetText(msg, ...)
 	self.color = Dharma.Color(...) or self.color
 	self.text = msg
-	Dharma.screenUpdate = true
+	self:UpdateScreen()
 end
 
 function Text:SetFormattedText(msg, ...)
@@ -57,10 +58,10 @@ end
 
 function Text:SetAlign(align)
 	self.align = align
-	Dharma.screenUpdate = true
+	self:UpdateScreen()
 end
 
 function Text:SetColor(...)
 	self.color = Dharma.Color(...)
-	Dharma.screenUpdate = true
+	self:UpdateScreen()
 end

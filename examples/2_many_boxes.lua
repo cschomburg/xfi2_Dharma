@@ -25,11 +25,12 @@ local colors = {
 }
 
 -- Making a dark gray background
-local Background = Dharma.New("Box", color.new(50, 50, 50))
+local Application = Dharma.New("Widget", color.new(50, 50, 50))
 
 -- Now we create our box-class
-local MovableBox = Dharma.NewClass("MovableBox", "Box")
+local MovableBox = Dharma.NewClass("MovableBox", "Text")
 MovableBox:EnableTouch(true, true) -- We want to have them touch-enabled
+MovableBox:SetBorderColor("black")
 
 -- Every time the user moves a box,
 -- we adjust the position of the box
@@ -39,16 +40,17 @@ end
 
 -- Now we spawn the 100 boxes!
 for i=1, 100 do
-	local box = Dharma.New("MovableBox")
+	local box = Application:New("MovableBox")
 
 	local color = colors[math.random(1, #colors)]
 	local size = math.random(5, 20)
 	local x, y = math.random(0, screen.width()), math.random(0, screen.height())
 
-	box:SetColor(color)
+	box:SetText(i)
+	box:SetBackgroundColor(color)
 	box:SetSize(size)
 	box:SetPos(x, y)
 end
 
 -- Ready for action!
-Dharma.Loop(10)
+Application:Loop(10)

@@ -8,17 +8,17 @@
 require "Dharma/core"
 
 -- Making a dark gray background
-local Background = Dharma.New("Box", color.new(50, 50, 50))
+local Application = Dharma.New("Widget", "black")
 
 -- Now we create the class for our two boxes
-local MovableBox = Dharma.NewClass("MovableBox", "Box")
-MovableBox:SetColor("red")
+local MovableBox = Dharma.NewClass("MovableBox", "Widget")
+MovableBox:SetBackgroundColor("red")
 MovableBox:EnableTouch(true, true) -- Make it touchable!
 MovableBox:SetSize(50)
 
 -- Let's create two of them
-local box1 = Dharma.New("MovableBox")
-local box2 = Dharma.New("MovableBox")
+local box1 = Application:New("MovableBox")
+local box2 = Application:New("MovableBox")
 
 -- Display them on opposite sides
 box1:SetPos(10, 80)
@@ -32,13 +32,13 @@ function MovableBox:OnTouchMove(x, y)
 
 	-- Check for intersection
 	if(box1:Intersects(box2)) then
-		box1:SetColor("lime")
-		box2:SetColor("lime")
+		box1:SetBackgroundColor("lime")
+		box2:SetBackgroundColor("lime")
 	else
-		box1:SetColor()
-		box2:SetColor()
+		box1:SetBackgroundColor()
+		box2:SetBackgroundColor()
 	end
 end
 
 -- Ready for action!
-Dharma.Loop(10)
+Application:Loop(10)

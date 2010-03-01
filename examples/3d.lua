@@ -105,25 +105,27 @@ end
 require "Dharma/core"
 
 -- The background widget, handling all events
-local BoxScreen = Dharma.New("Box", "black")
-BoxScreen:EnableTouch(true, true)
+local Application = Dharma.New("Widget", "black")
+Application:EnableTouch(true, true)
 
 -- Rotate the camera with touchscreen
-function BoxScreen:OnTouchMove(x, y)
-	local lX, lY = Dharma.GetLastTouchPos()
+function Application:OnTouchMove(x, y)
+	local lX, lY = self:GetLastTouchPos()
 
 	camYaw = camYaw + (lX-x) * 0.5
 	camPitch = camPitch - (lY-y) * 0.5
 	Precalculate()
 
-	Dharma.screenUpdate = true
+	Application:UpdateScreen()
 end
 
 -- Yay, nice color
 local darkGray = color.new(50, 50, 50)
 
 -- Draw the 3D objects
-function BoxScreen:OnDraw()
+function Application:OnDraw()
+	Dharma.Classes.Widget.OnDraw(self)
+
 	createLine(-1, 0, 0, 1, 0, 0, Dharma.Colors.red)
 	createLine(0, -1, 0, 0, 1, 0, Dharma.Colors.lime)
 	createLine(0, 0, -1, 0, 0, 1, Dharma.Colors.yellow)
@@ -147,9 +149,9 @@ end
 local Text3D = Dharma.NewClass("Text3D", "Text")
 
 -- The new draw-function
-function Text3D:_draw()
+function Text3D:OnDraw()
 	self.x, self.y = WorldToScreen(self.wX, self.wY, self.wZ)
-	Dharma.Classes.Text._draw(self)
+	Dharma.Classes.Text.OnDraw(self)
 end
 
 -- Function for setting coordinates
@@ -158,9 +160,9 @@ function Text3D:SetWorldPos(x, y, z)
 end
 
 -- Create three instances, one for each axis
-Dharma.New("Text3D", "X", 12, "red"):SetWorldPos(1, 0, 0)
-Dharma.New("Text3D", "Y", 12, "lime"):SetWorldPos(0, 1, 0)
-Dharma.New("Text3D", "Z", 12, "yellow"):SetWorldPos(0, 0, 1)
+Application:New("Text3D", "X", 12, "red"):SetWorldPos(1, 0, 0)
+Application:New("Text3D", "Y", 12, "lime"):SetWorldPos(0, 1, 0)
+Application:New("Text3D", "Z", 12, "yellow"):SetWorldPos(0, 0, 1)
 
 -- Start the event loop
-Dharma.Loop(10)
+Application:Loop(10)
