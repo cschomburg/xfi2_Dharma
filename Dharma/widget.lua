@@ -213,23 +213,31 @@ local function sensorEvent(self)
 	-- Placeholder
 end
 
-local function loop(self, wait)
+local function handleEvents(self)
+	if(control.isButton() == 1) then
+		buttonEvent(self)
+	elseif(control.isTouch() == 1) then
+		lX, lY, x, y = x, y, touch.pos()
+		if(tDown) then
+			touchEvent(tDown)
+		else
+			applyFuncRecursive(self, true, touchEvent)
+		end
+	elseif(control.isSensor() == 1) then
+		sensorEvent(self)
+	end
+end
+
+local function loop(self, waitTime)
 	screenUpdate = true
 	repeat
-
-		-- Event checks
-		if(control.read(wait == true and 1 or nil) == 1) then
-			if(control.isButton() == 1) then
-				buttonEvent(self)
-			elseif(control.isTouch() == 1) then
-				lX, lY, x, y = x, y, touch.pos()
-				if(tDown) then
-					touchEvent(tDown)
-				else
-					applyFuncRecursive(self, true, touchEvent)
+		if(not screenUpdate) then
+			if(waitTime) then
+				while(control.read() == 1) do
+					handleEvents(self)
 				end
-			elseif(control.isSensor() == 1) then
-				sensorEvent(self)
+			elseif(control.read(1) == 1) then
+				handleEvents(self)
 			end
 		end
 
@@ -240,16 +248,18 @@ local function loop(self, wait)
 			screenUpdate = nil
 			screen.update()
 		end
-		if(wait and wait ~= true) then os.wait(wait) end
+		if(waitTime) then os.wait(waitTime) end
 	until self.closed
-	screenUpdate, self.closed = true
+	screenUpdate = true
+	self.closed = nil
 end
 
 -- Start the event loop
 function Widget:Loop(wait)
 	local success, error = pcall(loop, self, wait)
-	if(success) then return end
-	Dharma.Console:Error(error)
+	if(not success) then return
+		Dharma.Console:Error(error)
+	end
 end
 
 -- Exit the event loop
@@ -278,4 +288,4 @@ function Widget:GetLastTouchPos()
 end
 
 Widget.OnHomeClick = Widget.Exit
-Widget.OnPowerClick = function() Dharma.Console:Loop(true) end
+Widget.OnPowerClick = function() Dharma.Console:Loop() end

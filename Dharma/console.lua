@@ -26,6 +26,9 @@ Dharma.Console = Console
 local Clock = Console:New("Text", "Clock")
 Clock:SetPos(5, 5)
 
+local Time = Console:New("Text", "Time")
+Time:SetPos(130, 5)
+
 local Memory = Console:New("Text", "Memory")
 Memory:SetPos(200, 5)
 
@@ -58,6 +61,7 @@ end
 
 function Console:OnThink()
 	Clock:SetText("Clock: "..clockFormat(os.clock()))
+	Time:SetText("Time: "..clockFormat(os.time())
 	Memory:SetText("Mem: "..memoryFormat(collectgarbage("count")))
 end
 
@@ -66,7 +70,7 @@ function Console:OnPowerClick()
 end
 
 function Console:OnHomeClick()
-	os.exit()
+	collectgarbage("collect")
 end
 
 function Console:Error(msg)
@@ -80,5 +84,5 @@ function Console:Error(msg)
 		i = i+1
 	end
 
-	self:Loop(true)
+	self:Loop(10)
 end
