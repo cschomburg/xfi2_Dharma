@@ -27,7 +27,7 @@ Dharma = Dharma or {}
 ********************************]]
 
 local dharmaFiles = {
-	Console = "console",
+	Debug = "debug",
 	Profiler = "profiler",
 	Colors = "colors",
 
@@ -81,6 +81,14 @@ function Dharma.Color(r,g,b,a)
 	else
 		return r
 	end
+end
+
+local isZen
+function Dharma.IsZen()
+	if(isZen == nil) then
+		isZen = debug.traceback():match("a:/")
+	end
+	return isZen
 end
 
 Dharma.Classes = classes

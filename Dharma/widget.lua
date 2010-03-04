@@ -228,9 +228,18 @@ local function handleEvents(self)
 	end
 end
 
-local function loop(self, waitTime)
+local calcNum, lastCalc, clock = 0
+
+-- Start the event loop
+function Widget:Loop(waitTime)
 	screenUpdate = true
 	repeat
+
+		if(os.time() ~= clock) then
+			clock = os.time()
+			lastCalc, calcNum = calcNum, 0
+		end
+
 		if(not screenUpdate) then
 			if(waitTime) then
 				while(control.read() == 1) do
@@ -241,9 +250,10 @@ local function loop(self, waitTime)
 			end
 		end
 
-		applyFuncRecursive(self, nil, safeCall, "OnThink")
+		applyFuncRecursive(self, nil, safeCall, "OnThink", waitTime)
 
 		if(screenUpdate) then
+			calcNum = calcNum + 1
 			applyFuncRecursive(self, nil, safeCall, "OnDraw")
 			screenUpdate = nil
 			screen.update()
@@ -254,12 +264,8 @@ local function loop(self, waitTime)
 	self.closed = nil
 end
 
--- Start the event loop
-function Widget:Loop(wait)
-	local success, error = pcall(loop, self, wait)
-	if(not success) then return
-		Dharma.Console:Error(error)
-	end
+function Widget:GetFPS()
+	return lastCalc
 end
 
 -- Exit the event loop
@@ -288,4 +294,6 @@ function Widget:GetLastTouchPos()
 end
 
 Widget.OnHomeClick = Widget.Exit
-Widget.OnPowerClick = function() Dharma.Console:Loop() end
+Widget.OnPowerClick = function(self) Dharma.Debug.Toggle(self) end
+Widget.Color = Dharma.Color
+Widget.IsZen = Dharma.IsZen
