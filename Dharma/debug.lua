@@ -36,6 +36,7 @@ end
 local DebugInfoClass = Dharma.NewClass("DebugInfo", "Widget")
 DebugInfoClass:SetBackgroundColor(color.new(0, 0, 0, 128))
 DebugInfoClass:SetSize(nil, 28)
+DebugInfoClass:EnableTouch(true, true)
 
 function DebugInfoClass:_new()
 	Dharma.Classes.Widget._new(self)
