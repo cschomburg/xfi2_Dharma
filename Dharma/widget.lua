@@ -141,16 +141,17 @@ end
 local function touchEvent(self)
 	if(self.touchEnabled and (tDown == self or self:Contains(x, y))) then
 		if(touch.up() == 1) then
-			safeCall(self, "OnTouchUp", x, y)
 			tDown = nil
+			safeCall(self, "OnTouchUp", x, y)
 		elseif(touch.down() == 1) then
-			safeCall(self, "OnTouchDown", x, y)
 			tDown = self
+			safeCall(self, "OnTouchDown", x, y)
 		elseif(touch.hold() == 1) then
 			safeCall(self, "OnTouchHold", x, y)
 		elseif(touch.move() == 1) then
 			safeCall(self, "OnTouchMove", x, y)
 		elseif(touch.click() == 1) then
+			tDown = nil
 			safeCall(self, "OnTouchClick", x, y)
 		end
 		return true
@@ -232,6 +233,7 @@ local calcNum, lastCalc, clock = 0
 
 -- Start the event loop
 function Widget:Loop(waitTime)
+	tDown = nil
 	screenUpdate = true
 	repeat
 
