@@ -22,7 +22,7 @@
 
 --[[*****************************
 	1. Widget
-		The simplest of all Dharma Widgets
+		The base of all Dharma Widgets
 ********************************]]
 
 local Widget = Dharma.NewClass("Widget")
@@ -264,6 +264,7 @@ function Widget:Loop(waitTime)
 	until self.closed
 	screenUpdate = true
 	self.closed = nil
+	safeCall(self, "OnExit")
 end
 
 function Widget:GetFPS()

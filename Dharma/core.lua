@@ -27,6 +27,7 @@ Dharma = Dharma or {}
 ********************************]]
 
 local dharmaFiles = {
+	Data = "data",
 	Debug = "debug",
 	Profiler = "profiler",
 	Colors = "colors",
