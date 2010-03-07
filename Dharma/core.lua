@@ -33,6 +33,7 @@ local dharmaFiles = {
 	Colors = "colors",
 
 	Widget = "widget",
+	Button = "w_button",
 	Image = "w_image",
 	Text = "w_text",
 }
