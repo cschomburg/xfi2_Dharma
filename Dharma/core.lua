@@ -35,6 +35,7 @@ local dharmaFiles = {
 	Widget = "widget",
 	Button = "w_button",
 	Image = "w_image",
+	Slider = "w_slider",
 	Text = "w_text",
 }
 
