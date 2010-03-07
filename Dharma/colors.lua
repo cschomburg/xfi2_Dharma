@@ -1,4 +1,16 @@
---[[
+--[[!
+
+	@name		Dharma
+	@author		Constantin Schomburg <xconstruct@gmail.com>
+	@version	0.1
+
+	@section DESCRIPTION
+
+	Dharma is a framework for Creative Zen X-Fi 2 Applications.
+	The core introduces methods for creating OOP classes and
+	handles loading of additional files, including the GUI widgets.
+
+	@section LICENSE
 
     Dharma: A Framework for Creative Zen X-Fi 2 Applications
 
@@ -18,6 +30,11 @@
 
     You should have received a copy of the GNU General Public License
     along with Dharma.  If not, see <http://www.gnu.org/licenses/>.
+]]
+
+--[[!
+	@section Colors
+	Holds all colorStrings and their color-tables
 ]]
 
 local Colors = {

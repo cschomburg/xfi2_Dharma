@@ -1,4 +1,16 @@
---[[
+--[[!
+
+	@name		Dharma
+	@author		Constantin Schomburg <xconstruct@gmail.com>
+	@version	0.1
+
+	@section DESCRIPTION
+
+	Dharma is a framework for Creative Zen X-Fi 2 Applications.
+	The core introduces methods for creating OOP classes and
+	handles loading of additional files, including the GUI widgets.
+
+	@section LICENSE
 
     Dharma: A Framework for Creative Zen X-Fi 2 Applications
 
@@ -20,10 +32,14 @@
     along with Dharma.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 
---[[*****************************
-	Button
-		A clickable widget with text and background
-********************************]]
+--[[!
+	@class Button
+	@extends Widget
+	Creates a clickable text button
+
+	@var color The color of the text [default: white]
+	@var text The displayed text
+]]
 
 local Button = Dharma.NewClass("Button", "Widget")
 Button.color = color.new(255, 255, 255)
@@ -34,6 +50,22 @@ local btnLeft = image.load("Dharma/images/button-left.png")
 local btnMiddle = image.load("Dharma/images/button-middle.png")
 local btnRight = image.load("Dharma/images/button-right.png")
 
+--[[!
+	@fn Button:_new([text, color])
+	Constructor
+	@param text The caption of the button [optional]
+	@param color Either a colorString or color-table for the text color [optional]
+]]
+function Button:_new(msg, color)
+	Dharma.Classes.Widget._new(self)
+	Button:SetText(msg, color)
+	self:EnableTouch(true, true)
+end
+
+--[[!
+	@fn Button:OnDraw()
+	Draws the button
+]]
 function Button:OnDraw()
 	Dharma.Classes.Widget.OnDraw(self)
 
@@ -53,24 +85,34 @@ function Button:OnDraw()
 	end
 end
 
-function Button:_new(msg, color)
-	Dharma.Classes.Widget._new(self)
-	self.text, self.color = msg, Dharma.Color(color)
-	self:EnableTouch(true, true)
-	return self
-end
-
-function Button:SetText(msg, ...)
-	self.color = Dharma.Color(...) or self.color
+--[[!
+	@fn Button:SetText([text, color])
+	Sets the text and text color of the button
+	@param text The caption of the button [optional]
+	@param color Either a colorString or color-table for the text color [optional]
+]]
+function Button:SetText(msg, color)
+	self.color = Dharma.Color(color) or self.color
 	self.text = msg
 	self:UpdateScreen()
 end
 
+--[[!
+	@fn Button:SetFormattedText(format, ...)
+	Sets the text by using string.format(format, ...)
+	@param format The format string
+	@param ... The arguments for format
+]]
 function Button:SetFormattedText(msg, ...)
 	self:SetText(msg:format(...))
 end
 
-function Button:SetColor(...)
-	self.color = Dharma.Color(...)
+--[[!
+	@fn Button:SetColor(color)
+	Sets the text color
+	@param color Either a colorString or color-table for the text color
+]]
+function Button:SetColor(color)
+	self.color = Dharma.Color(color)
 	self:UpdateScreen()
 end

@@ -1,4 +1,16 @@
---[[
+--[[!
+
+	@name		Dharma
+	@author		Constantin Schomburg <xconstruct@gmail.com>
+	@version	0.1
+
+	@section DESCRIPTION
+
+	Dharma is a framework for Creative Zen X-Fi 2 Applications.
+	The core introduces methods for creating OOP classes and
+	handles loading of additional files, including the GUI widgets.
+
+	@section LICENSE
 
     Dharma: A Framework for Creative Zen X-Fi 2 Applications
 
@@ -20,6 +32,13 @@
     along with Dharma.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 
+--[[!
+	@class DebugInfo
+	@extends Widget
+	@implements Text
+	Holds additional debugging info
+]]
+
 local Debug = {}
 Dharma.Debug = Debug
 
@@ -33,12 +52,16 @@ local function memoryFormat(kb)
 	end
 end
 
-local DebugInfoClass = Dharma.NewClass("DebugInfo", "Widget")
-DebugInfoClass:SetBackgroundColor(color.new(0, 0, 0, 128))
-DebugInfoClass:SetSize(nil, 28)
-DebugInfoClass:EnableTouch(true, true)
+local DebugInfo = Dharma.NewClass("DebugInfo", "Widget")
+DebugInfo:SetBackgroundColor(color.new(0, 0, 0, 128))
+DebugInfo:SetSize(nil, 28)
+DebugInfo:EnableTouch(true, true)
 
-function DebugInfoClass:_new()
+--[[!
+	@fn DebugInfo:_new()
+	Constructor function
+]]
+function DebugInfo:_new()
 	Dharma.Classes.Widget._new(self)
 
 	self.Memory = self:New("Text", "Memory")
@@ -48,12 +71,20 @@ function DebugInfoClass:_new()
 	self.FPS:SetPos(200, 5)
 end
 
-function DebugInfoClass:OnThink()
+--[[!
+	@fn DebugInfo:OnThink()
+	Updates the display
+]]
+function DebugInfo:OnThink()
 	self.Memory:SetFormattedText("Mem: %s", memoryFormat(collectgarbage("count")))
 	self.FPS:SetFormattedText("FPS: %d", self:GetFPS())
 end
 
-function DebugInfoClass:OnClick(self)
+--[[!
+	@fn DebugInfo:OnClick()
+	Triggers the garbage collector
+]]
+function DebugInfo:OnClick()
 	collectgarbage("collect")
 end
 

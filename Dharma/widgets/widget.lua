@@ -1,4 +1,16 @@
---[[
+--[[!
+
+	@name		Dharma
+	@author		Constantin Schomburg <xconstruct@gmail.com>
+	@version	0.1
+
+	@section DESCRIPTION
+
+	Dharma is a framework for Creative Zen X-Fi 2 Applications.
+	The core introduces methods for creating OOP classes and
+	handles loading of additional files, including the GUI widgets.
+
+	@section LICENSE
 
     Dharma: A Framework for Creative Zen X-Fi 2 Applications
 
@@ -20,10 +32,23 @@
     along with Dharma.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 
---[[*****************************
-	1. Widget
-		The base of all Dharma Widgets
-********************************]]
+--[[!
+	@class Widget
+	The base of all Dharma Widgets
+
+	@var x The relative x-coordinate of the topleft corner [default: 0]
+	@var y The relative y-coordinate of the topleft corner [default: 0]
+	@var width The width of the widget [default: screen-width]
+	@var height The height of the widget [default: screen-height]
+
+	@callback OnThink(waitTime) On every update
+	@callback OnDraw() A redrawing of the widget is needed
+	@callback OnTouchDown(x, y) The user touches the touchscreen
+	@callback OnTouchClick(x, y) The user clicks the touchscreen
+	@callback OnTouchHold(x, y) The user holds the touchscreen
+	@callback OnTouchMove(x, y) The user moves on the touchscreen
+	@callback OnTouchUp(x, y) The user releases the touchscreen
+]]
 
 local Widget = Dharma.NewClass("Widget")
 
@@ -32,31 +57,65 @@ Widget.y = 0
 Widget.width = screen.width()
 Widget.height = screen.height()
 
-Widget.IsClass = Dharma.IsClass
-
-function Widget:_new(...)
-	self.bgColor = Dharma.Color(...)
+--[[!
+	@fn Widget:_new([color])
+	The constructor of the class
+	@param color Either a colorString or color-table [optional]
+]]
+function Widget:_new(color)
+	self.bgColor = Dharma.Color(color)
 	self.children = {self}
 end
 
-function Widget:New(...)
-	local widget = Dharma.New(...)
+--[[!
+	@fn bool = Widget:IsClass(name)
+	Checks if the widget inherits functions from the class 'name'
+	@param name The name of the class
+	@return bool Boolean holding the result
+]]
+Widget.IsClass = Dharma.IsClass
+
+--[[!
+	@fn widget = Widget:New(name [, ...])
+	Creates a new instance of class 'name' as a child of this widget
+	@param name The name of the class
+	@param ... additional arguments passed to the constructor [optional]
+	@return widget The new widget
+]]
+function Widget:New(name, ...)
+	local widget = Dharma.New(name, ...)
 	widget:SetParent(self)
 	self.children[#self.children+1] = widget
 	return widget
 end
 
+--[[!
+	@fn bool = Widget:Contains(x, y)
+	Checks whether the widget contains the coordinates
+	@param x An absolute x-coordinate
+	@param y An absolute y-coordinate
+]]
 function Widget:Contains(x, y)
 	local wX, wY = self:GetScreenPos()
 	return (x >= wX) and (x <= wX + self.width) and (y >= wY) and (y <= wY + self.height)
 end
 
+--[[!
+	@fn bool = Widget:Intersects(widget)
+	Checks whether the widget intersects with another one
+	@param widget The other widget
+]]
 function Widget:Intersects(widget)
 	local x, y = self:GetScreenPos()
 	local wX, wY = widget:GetScreenPos()
 	return (x < wX + widget.width) and (wX < x + self.width) and (y < wY + widget.height) and (wY < y + self.height)
 end
 
+--[[!
+	@fn Widget:SetParent(parent)
+	Set the parent of the widget to another widget
+	@param parent another widget serving as the parent
+]]
 function Widget:SetParent(parent)
 	local oldParent = self.parent
 
@@ -67,42 +126,80 @@ function Widget:SetParent(parent)
 				break
 			end
 		end
-		self.parent:UpdateScreen()
 	end
 
 	self.parent = parent
-	if(parent) then parent:UpdateScreen() end
+	self:UpdateScreen()
 end
 
+--[[!
+	@fn Widget:EnableTouch(touch [, focus])
+	Enables touch callbacks for this widget
+	@param touch Boolean for enabling touch events
+	@param focus Boolean for receiving events when not hovered, but focused [optional]
+]]
 function Widget:EnableTouch(touch, focus)
 	self.touchEnabled, self.focusEnabled = touch, focus
 end
 
+--[[!
+	@fn Widget:SetHidden(flag)
+	Hide this widget, stopping touchscreen interaction and redrawing
+	@param flag Boolean for toggling
+]]
 function Widget:SetHidden(flag)
 	self.hidden = flag
 	self:UpdateScreen()
 end
 
+--[[!
+	@fn bool = Widget:IsHidden()
+	Checks whether the widget or its parent is hidden
+]]
 function Widget:IsHidden()
 	return self.hidden or (self.parent and self.parent:IsHidden())
 end
 
+--[[!
+	@fn Widget:SetSize(width, height)
+	@overload Widget:SetSize(size)
+	Sets the width and height of the widget
+	@param width Number holding new width
+	@param height Number holding new height
+	@param size Number holding new width and height
+]]
 function Widget:SetSize(width, height)
 	self.width, self.height = width, height or width
 	self:UpdateScreen()
 end
 
+--[[!
+	@fn Widget:SetPos(x, y)
+	Sets the position of the widget, relative to its parent
+	@param x The relative x-coordinate of the topleft corner
+	@param y The relative y-coordinate of the topleft corner
+]]
 function Widget:SetPos(x, y)
 	self.x, self.y = x, y
 	self:UpdateScreen()
 end
 
+--[[!
+	@fn x, y = Widget:GetScreenPos()
+	Returns the absolute position of the widget
+	@return x The absolute x-coordinate of the topleft corner
+	@return y The absolute y-coordinate of the topleft corner
+]]
 function Widget:GetScreenPos()
 	if(not self.parent) then return self.x, self.y end
 	local x, y = self.parent:GetScreenPos()
 	return self.x + x, self.y + y
 end
 
+--[[!
+	@fn Widget:OnDraw()
+	Draws the widget's background and border
+]]
 function Widget:OnDraw()
 	local x, y = self:GetScreenPos()
 	if(self.borderColor) then
@@ -113,11 +210,21 @@ function Widget:OnDraw()
 	end
 end
 
-function Widget:SetBackgroundColor(...)
-	self.bgColor = Dharma.Color(...)
+--[[!
+	@fn Widget:SetBackgroundColor(color)
+	Sets the background color of the widget
+	@param color Either a colorString or color-table
+]]
+function Widget:SetBackgroundColor(color)
+	self.bgColor = Dharma.Color(color)
 	self:UpdateScreen()
 end
 
+--[[!
+	@fn Widget:SetBorderColor(color)
+	Sets the border color of the widget
+	@param color Either a colorString or color-table
+]]
 function Widget:SetBorderColor(...)
 	self.borderColor = Dharma.Color(...)
 	self:UpdateScreen()
@@ -231,7 +338,11 @@ end
 
 local calcNum, lastCalc, clock = 0
 
--- Start the event loop
+--[[!
+	@fn Widget:Loop([waitTime])
+	Starts the loop, processing events/callbacks and redrawing frames
+	@param waitTime The amount of milliseconds to wait before the next iteration [optional]
+]]
 function Widget:Loop(waitTime)
 	tDown = nil
 	screenUpdate = true
@@ -267,31 +378,61 @@ function Widget:Loop(waitTime)
 	safeCall(self, "OnExit")
 end
 
+--[[!
+	@fn fps = Widget:GetFPS()
+	Returns an approximation of the frames per second
+	@result fps Number holding the frames per second
+]]
 function Widget:GetFPS()
 	return lastCalc
 end
 
--- Exit the event loop
+--[[!
+	@fn Widget:Exit()
+	Exit the loop on the next iteration
+]]
 function Widget:Exit()
 	self.closed = true
 end
 
+--[[!
+	@fn Widget:UpdateScreen()
+	Schedule a redrawing of the screen on the next iteration
+]]
 function Widget:UpdateScreen()
 	screenUpdate = true
 end
 
+--[[!
+	@fn bool = Widget:IsTouchDown()
+	Returns whether the user currently presses the touchscreen
+]]
 function Widget.IsTouchDown()
 	return touchDown
 end
 
+--[[!
+	@fn bool = Widget:IsHomeDown()
+	Returns whether the user currently presses the home key
+]]
 function Widget:IsHomeDown()
 	return homeDown
 end
 
+--[[!
+	@fn bool = Widget:IsPowerDown()
+	Returns whether the user currently presses the power key
+]]
 function Widget:IsPowerDown()
 	return powerDown
 end
 
+--[[!
+	@fn x, y = Widget:GetLastTouchPos()
+	Returns the last touchscreen coordinate of the user
+	@return x The x-coordinate
+	@return y The y-coordinate
+]]
 function Widget:GetLastTouchPos()
 	return lX, lY
 end

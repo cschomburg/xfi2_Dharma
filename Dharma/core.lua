@@ -1,4 +1,16 @@
---[[
+--[[!
+
+	@name		Dharma
+	@author		Constantin Schomburg <xconstruct@gmail.com>
+	@version	0.1
+
+	@section DESCRIPTION
+
+	Dharma is a framework for Creative Zen X-Fi 2 Applications.
+	The core introduces methods for creating OOP classes and
+	handles loading of additional files, including the GUI widgets.
+
+	@section LICENSE
 
     Dharma: A Framework for Creative Zen X-Fi 2 Applications
 
@@ -22,21 +34,17 @@
 
 Dharma = Dharma or {}
 
---[[*****************************
-	1. Core Functions
-********************************]]
-
 local dharmaFiles = {
 	Data = "data",
-	Debug = "debug",
 	Profiler = "profiler",
 	Colors = "colors",
 
-	Widget = "widget",
-	Button = "w_button",
-	Image = "w_image",
-	Slider = "w_slider",
-	Text = "w_text",
+	Widget = "widgets/widget",
+	Button = "widgets/w_button",
+	Debug = "widgets/debug",
+	Image = "widgets/w_image",
+	Slider = "widgets/w_slider",
+	Text = "widgets/w_text",
 }
 
 local classes = {}
@@ -51,8 +59,15 @@ end}
 setmetatable(Dharma, mt_load)
 setmetatable(classes, mt_load)
 
+--[[!
+	@fn prototype = Dharma.NewClass(name [, parent])
+	Creates a new class prototype, inheriting from class 'parent'
+	@param name The name of the new class
+	@param parent The parent class from which functions will be inherited [optional]
+	@return prototype The basis of the new class
+--]]
 function Dharma.NewClass(name, parent)
-	parent = classes[parent]
+	parent = parent and classes[parent]
 
 	local prototype = parent and setmetatable({}, parent) or {}
 	prototype.__index = prototype
@@ -61,13 +76,26 @@ function Dharma.NewClass(name, parent)
 	return prototype
 end
 
+--[[!
+	@fn instance = Dharma.New(name [, ...])
+	Creates an instance of the class 'name'.
+	@param name The name of the class
+	@param ... Additional options passed to the constructor [optional]
+	@return instance The newly created instance
+]]
 function Dharma.New(name, ...)
 	local class = classes[name]
-	local widget = setmetatable({}, class)
-	widget:_new(...)
-	return widget
+	local instance = setmetatable({}, class)
+	instance:_new(...)
+	return instance
 end
 
+--[[!
+	@fn bool = Dharma.IsClass(object, name)
+	Checks whether the instance inherits functions from the class 'name'
+	@param object The instance which is checked
+	@param name The class name
+]]
 function Dharma.IsClass(object, name)
 	while(true) do
 		if(not object or not object.class) then return end
@@ -76,16 +104,26 @@ function Dharma.IsClass(object, name)
 	end
 end
 
+--[[!
+	@fn color = Dharma.Color(colorString)
+	@overload color = Dharma.Color(color)
+	Returns a color object representing the parameters
+	@param colorString a color name
+	@param color a color-table
+	@return color the resulting color-table
+]]
 function Dharma.Color(r,g,b,a)
-	if(r and g and b) then
-		return a and color.new(r,g,b,a) or color.new(r,g,b)
-	elseif(type(r) == "string") then
+	if(type(r) == "string") then
 		return Dharma.Colors[r]
 	else
 		return r
 	end
 end
 
+--[[!
+	@fn bool = Dharma.IsZen()
+	Returns whether the environment is a real Zen or a simulator
+]]
 local isZen
 function Dharma.IsZen()
 	if(isZen == nil) then
