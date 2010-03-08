@@ -4,8 +4,6 @@
 	@author		Constantin Schomburg <xconstruct@gmail.com>
 	@version	0.1
 
-	@section DESCRIPTION
-
 	Dharma is a framework for Creative Zen X-Fi 2 Applications.
 	The core introduces methods for creating OOP classes and
 	handles loading of additional files, including the GUI widgets.
@@ -43,7 +41,6 @@
 local Image = Dharma.NewClass("Image", "Widget")
 
 --[[
-	@fn Image:_new(imagePath)
 	Constructor function
 	@param imagePath The filepath of the image
 ]]
@@ -53,7 +50,6 @@ function Image:_new(path)
 end
 
 --[[
-	@fn Image:OnDraw()
 	Draws the image
 ]]
 function Image:OnDraw()

@@ -4,8 +4,6 @@
 	@author		Constantin Schomburg <xconstruct@gmail.com>
 	@version	0.1
 
-	@section DESCRIPTION
-
 	Dharma is a framework for Creative Zen X-Fi 2 Applications.
 	The core introduces methods for creating OOP classes and
 	handles loading of additional files, including the GUI widgets.
@@ -45,7 +43,6 @@ local DataBase = {}
 DataBase.__index = DataBase
 
 --[[!
-	@fn database = Data.Get(name [, defaults])
 	Load the specified data table from its file or create a new one
 	@param name The name of the database
 	@param defaults A table used for default values [optional]
@@ -95,7 +92,6 @@ tableToText = function(tbl)
 end
 
 --[[!
-	@fn Data.Save(name)
 	Saves the specified database into a file
 	@param name The name of the database
 ]]

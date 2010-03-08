@@ -4,8 +4,6 @@
 	@author		Constantin Schomburg <xconstruct@gmail.com>
 	@version	0.1
 
-	@section DESCRIPTION
-
 	Dharma is a framework for Creative Zen X-Fi 2 Applications.
 	The core introduces methods for creating OOP classes and
 	handles loading of additional files, including the GUI widgets.
@@ -43,7 +41,6 @@ Dharma.Profiler = Profiler
 local points, start = {}
 
 --[[!
-	@fn Profiler.Start()
 	Starts the profiling
 ]]
 function Profiler.Start()
@@ -51,7 +48,6 @@ function Profiler.Start()
 end
 
 --[[!
-	@fn Profiler.Stop(name [, highest]
 	Records the elapsed time at point 'name'
 	@param name The name of the point
 	@param highest Only record the maximum value [optional]
@@ -66,7 +62,6 @@ local textColor = color.new(255, 255, 255)
 local bgColor = color.new(0, 0, 0, 170)
 
 --[[!
-	@fn Profiler.Output(x, y)
 	Draws a list of the statistics on the screen
 	@param x The x-coordinate of the topleft corner
 	@param y The y-coordinate of the topleft corner

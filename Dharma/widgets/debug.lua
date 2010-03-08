@@ -4,8 +4,6 @@
 	@author		Constantin Schomburg <xconstruct@gmail.com>
 	@version	0.1
 
-	@section DESCRIPTION
-
 	Dharma is a framework for Creative Zen X-Fi 2 Applications.
 	The core introduces methods for creating OOP classes and
 	handles loading of additional files, including the GUI widgets.
@@ -58,7 +56,6 @@ DebugInfo:SetSize(nil, 28)
 DebugInfo:EnableTouch(true, true)
 
 --[[!
-	@fn DebugInfo:_new()
 	Constructor function
 ]]
 function DebugInfo:_new()
@@ -72,7 +69,6 @@ function DebugInfo:_new()
 end
 
 --[[!
-	@fn DebugInfo:OnThink()
 	Updates the display
 ]]
 function DebugInfo:OnThink()
@@ -81,7 +77,6 @@ function DebugInfo:OnThink()
 end
 
 --[[!
-	@fn DebugInfo:OnClick()
 	Triggers the garbage collector
 ]]
 function DebugInfo:OnClick()

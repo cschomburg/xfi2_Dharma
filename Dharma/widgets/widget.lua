@@ -1,10 +1,6 @@
 --[[!
-
-	@name		Dharma
 	@author		Constantin Schomburg <xconstruct@gmail.com>
 	@version	0.1
-
-	@section DESCRIPTION
 
 	Dharma is a framework for Creative Zen X-Fi 2 Applications.
 	The core introduces methods for creating OOP classes and
@@ -57,8 +53,8 @@ Widget.y = 0
 Widget.width = screen.width()
 Widget.height = screen.height()
 
+
 --[[!
-	@fn Widget:_new([color])
 	The constructor of the class
 	@param color Either a colorString or color-table [optional]
 ]]
@@ -68,7 +64,6 @@ function Widget:_new(color)
 end
 
 --[[!
-	@fn bool = Widget:IsClass(name)
 	Checks if the widget inherits functions from the class 'name'
 	@param name The name of the class
 	@return bool Boolean holding the result
@@ -76,7 +71,6 @@ end
 Widget.IsClass = Dharma.IsClass
 
 --[[!
-	@fn widget = Widget:New(name [, ...])
 	Creates a new instance of class 'name' as a child of this widget
 	@param name The name of the class
 	@param ... additional arguments passed to the constructor [optional]
@@ -90,7 +84,6 @@ function Widget:New(name, ...)
 end
 
 --[[!
-	@fn bool = Widget:Contains(x, y)
 	Checks whether the widget contains the coordinates
 	@param x An absolute x-coordinate
 	@param y An absolute y-coordinate
@@ -101,7 +94,6 @@ function Widget:Contains(x, y)
 end
 
 --[[!
-	@fn bool = Widget:Intersects(widget)
 	Checks whether the widget intersects with another one
 	@param widget The other widget
 ]]
@@ -112,7 +104,6 @@ function Widget:Intersects(widget)
 end
 
 --[[!
-	@fn Widget:SetParent(parent)
 	Set the parent of the widget to another widget
 	@param parent another widget serving as the parent
 ]]
@@ -133,7 +124,6 @@ function Widget:SetParent(parent)
 end
 
 --[[!
-	@fn Widget:EnableTouch(touch [, focus])
 	Enables touch callbacks for this widget
 	@param touch Boolean for enabling touch events
 	@param focus Boolean for receiving events when not hovered, but focused [optional]
@@ -143,7 +133,6 @@ function Widget:EnableTouch(touch, focus)
 end
 
 --[[!
-	@fn Widget:SetHidden(flag)
 	Hide this widget, stopping touchscreen interaction and redrawing
 	@param flag Boolean for toggling
 ]]
@@ -153,7 +142,6 @@ function Widget:SetHidden(flag)
 end
 
 --[[!
-	@fn bool = Widget:IsHidden()
 	Checks whether the widget or its parent is hidden
 ]]
 function Widget:IsHidden()
@@ -161,8 +149,6 @@ function Widget:IsHidden()
 end
 
 --[[!
-	@fn Widget:SetSize(width, height)
-	@overload Widget:SetSize(size)
 	Sets the width and height of the widget
 	@param width Number holding new width
 	@param height Number holding new height
@@ -174,7 +160,6 @@ function Widget:SetSize(width, height)
 end
 
 --[[!
-	@fn Widget:SetPos(x, y)
 	Sets the position of the widget, relative to its parent
 	@param x The relative x-coordinate of the topleft corner
 	@param y The relative y-coordinate of the topleft corner
@@ -185,7 +170,40 @@ function Widget:SetPos(x, y)
 end
 
 --[[!
-	@fn x, y = Widget:GetScreenPos()
+	Returns the relative position of one of the edges/corners
+	@param anchor The name of the edge or corner
+	@return x The x-coordinate relative to the widget
+	@return y The y-coordinate relative to the widget
+]]
+function Widget:GetAnchorPos(anchor)
+	if(anchor == "topleft") then return 0, 0 end
+	if(anchor == "top") then return self.width/2, 0 end
+	if(anchor == "topright") then return self.width, 0 end
+	if(anchor == "right") then return self.width, self.height/2 end
+	if(anchor == "bottomright") then return self.width, self.height end
+	if(anchor == "bottom") then return self.width/2, self.height end
+	if(anchor == "bottomleft") then return 0, self.height end
+	if(anchor == "left") then return 0, self.height/2 end
+	if(anchor == "center") then return self.width/2, self.width/2 end
+end
+
+--[[!
+	Sets the position of the widget relative to another one
+	@param aAnchor The anchor of this widget which is used
+	@param widget The widget for using the relative position
+	@param bAnchor The anchor of the other widget
+	@param x The x-offset
+	@param y The y-offset
+]]
+function Widget:SetPoint(aAnchor, widget, bAnchor, xOffset, yOffset)
+	local aX, aY = self:GetAnchorPos(aAnchor)
+	local bX, bY = widget:GetAnchorPos(bAnchor, true)
+	local wX, wY = widget:GetScreenPos()
+	local pX, pY = self.parent:GetScreenPos()
+	self:SetPos(wX+bX-aX-pX+xOffset, wY+bY-aY-pY+yOffset)
+end
+
+--[[!
 	Returns the absolute position of the widget
 	@return x The absolute x-coordinate of the topleft corner
 	@return y The absolute y-coordinate of the topleft corner
@@ -197,7 +215,6 @@ function Widget:GetScreenPos()
 end
 
 --[[!
-	@fn Widget:OnDraw()
 	Draws the widget's background and border
 ]]
 function Widget:OnDraw()
@@ -211,7 +228,6 @@ function Widget:OnDraw()
 end
 
 --[[!
-	@fn Widget:SetBackgroundColor(color)
 	Sets the background color of the widget
 	@param color Either a colorString or color-table
 ]]
@@ -221,7 +237,6 @@ function Widget:SetBackgroundColor(color)
 end
 
 --[[!
-	@fn Widget:SetBorderColor(color)
 	Sets the border color of the widget
 	@param color Either a colorString or color-table
 ]]
@@ -339,7 +354,6 @@ end
 local calcNum, lastCalc, clock = 0
 
 --[[!
-	@fn Widget:Loop([waitTime])
 	Starts the loop, processing events/callbacks and redrawing frames
 	@param waitTime The amount of milliseconds to wait before the next iteration [optional]
 ]]
@@ -379,16 +393,14 @@ function Widget:Loop(waitTime)
 end
 
 --[[!
-	@fn fps = Widget:GetFPS()
 	Returns an approximation of the frames per second
-	@result fps Number holding the frames per second
+	@return fps Number holding the frames per second
 ]]
 function Widget:GetFPS()
 	return lastCalc
 end
 
 --[[!
-	@fn Widget:Exit()
 	Exit the loop on the next iteration
 ]]
 function Widget:Exit()
@@ -396,7 +408,6 @@ function Widget:Exit()
 end
 
 --[[!
-	@fn Widget:UpdateScreen()
 	Schedule a redrawing of the screen on the next iteration
 ]]
 function Widget:UpdateScreen()
@@ -404,7 +415,6 @@ function Widget:UpdateScreen()
 end
 
 --[[!
-	@fn bool = Widget:IsTouchDown()
 	Returns whether the user currently presses the touchscreen
 ]]
 function Widget.IsTouchDown()
@@ -412,7 +422,6 @@ function Widget.IsTouchDown()
 end
 
 --[[!
-	@fn bool = Widget:IsHomeDown()
 	Returns whether the user currently presses the home key
 ]]
 function Widget:IsHomeDown()
@@ -420,7 +429,6 @@ function Widget:IsHomeDown()
 end
 
 --[[!
-	@fn bool = Widget:IsPowerDown()
 	Returns whether the user currently presses the power key
 ]]
 function Widget:IsPowerDown()
@@ -428,7 +436,6 @@ function Widget:IsPowerDown()
 end
 
 --[[!
-	@fn x, y = Widget:GetLastTouchPos()
 	Returns the last touchscreen coordinate of the user
 	@return x The x-coordinate
 	@return y The y-coordinate

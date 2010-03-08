@@ -4,8 +4,6 @@
 	@author		Constantin Schomburg <xconstruct@gmail.com>
 	@version	0.1
 
-	@section DESCRIPTION
-
 	Dharma is a framework for Creative Zen X-Fi 2 Applications.
 	The core introduces methods for creating OOP classes and
 	handles loading of additional files, including the GUI widgets.
@@ -54,7 +52,6 @@ Slider.value = 1
 Slider.width, Slider.height = 200, 20
 
 --[[!
-	@fn Slider:OnDraw()
 	Draws the slider
 ]]
 function Slider:OnDraw()
@@ -72,7 +69,6 @@ function Slider:OnDraw()
 end
 
 --[[!
-	@fn Slider:SetColor(color)
 	Sets the color of the filled part
 	@param color Either a colorString or color-table
 ]]
@@ -82,7 +78,6 @@ function Slider:SetColor(color)
 end
 
 --[[!
-	@fn Slider:SetValue(value)
 	Sets the current value of the slider
 	@param value Number between min and max values
 ]]
@@ -96,7 +91,6 @@ function Slider:SetValue(value)
 end
 
 --[[!
-	@fn Slider:SetMinMaxValues(min, max)
 	Sets the bounds for the value
 	@param min The minimum value
 	@param max The maximmum value
@@ -107,8 +101,6 @@ function Slider:SetMinMaxValues(min, max)
 end
 
 --[[!
-	@fn Slider:SetTexture(image)
-	@overload Slider:SetTexture(imagePath)
 	Sets the texture for the filled part
 	@param image The image-table to use
 	@param imagePath String holding the image path

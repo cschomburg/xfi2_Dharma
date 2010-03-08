@@ -4,8 +4,6 @@
 	@author		Constantin Schomburg <xconstruct@gmail.com>
 	@version	0.1
 
-	@section DESCRIPTION
-
 	Dharma is a framework for Creative Zen X-Fi 2 Applications.
 	The core introduces methods for creating OOP classes and
 	handles loading of additional files, including the GUI widgets.
@@ -48,7 +46,6 @@ Text.align = "left"
 Text.height = 20
 
 --[[!
-	@fn Text:_new([msg, size, color, align])
 	Constructor function
 	@param msg The message to display [optional]
 	@param size The height of the widget [optional]
@@ -75,7 +72,6 @@ function Text:OnDraw()
 end
 
 --[[!
-	@fn Text:SetText([text, color])
 	Sets the text and text color of the button
 	@param text The caption of the button [optional]
 	@param color Either a colorString or color-table for the text color [optional]
@@ -87,7 +83,6 @@ function Text:SetText(msg, ...)
 end
 
 --[[!
-	@fn Text:SetFormattedText(format, ...)
 	Sets the text by using string.format(format, ...)
 	@param format The format string
 	@param ... The arguments for format
@@ -97,7 +92,6 @@ function Text:SetFormattedText(msg, ...)
 end
 
 --[[!
-	@fn Text:SetAlign(align)
 	Sets the align of the text
 	@param align The new align
 ]]
@@ -107,7 +101,6 @@ function Text:SetAlign(align)
 end
 
 --[[!
-	@fn Text:SetColor(color)
 	Sets the text color
 	@param color Either a colorString or color-table for the text color
 ]]
