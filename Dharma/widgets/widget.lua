@@ -417,7 +417,7 @@ end
 --[[!
 	Returns whether the user currently presses the touchscreen
 ]]
-function Widget.IsTouchDown()
+function Widget:IsTouchDown()
 	return touchDown
 end
 

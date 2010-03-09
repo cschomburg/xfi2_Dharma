@@ -39,8 +39,6 @@ local Data = {}
 Dharma.Data = Data
 
 local databases = {}
-local DataBase = {}
-DataBase.__index = DataBase
 
 --[[!
 	Load the specified data table from its file or create a new one
@@ -51,17 +49,25 @@ DataBase.__index = DataBase
 function Data.Get(name, defaults)
 	if(databases[name]) then return databases[name] end
 
-	local db, contents
+	local db, contents, isNew
 	local file = io.open(name..".data.lua", "r")
 	if(file) then
 		local contents = file:read("*a")
 		file:close()
-		db = #contents > 0 and assert(loadstring("return "..contents))() or {}
+		if(#contents > 0) then
+			db = assert(loadstring("return "..contents))()
+		else
+			db, isNew = {}, true
+		end
 	else
-		db = {}
+		db, isNew = {}, true
 	end
 	databases[name] = db
-	return defaults and setmetatable(db, defaults) or db
+	if(defaults) then
+		defaults.__index = defaults
+		setmetatable(db, defaults)
+	end
+	return db, isNew
 end
 
 local tableToText
