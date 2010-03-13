@@ -169,7 +169,7 @@ local dharmaKeyBoard, currWidget
 	@param atTop Boolean: places the keyboard at the top
 ]]
 function Dharma.KeyBoard(widget, atTop)
-	if(not self) then
+	if(not widget) then
 		return dharmaKeyBoard and dharmaKeyBoard:Exit()
 	end
 

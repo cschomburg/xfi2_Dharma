@@ -38,6 +38,9 @@
 	@var color The color-table of the text [default: white]
 	@var align The align of the text [default: left]
 	@var text The message to display
+	@var shadowColor The color-table of the shadow [default: none]
+	@var shadowX The shadow x-offset
+	@var shadowY The shadow y-offset
 ]]
 
 local Text = Dharma.NewClass("Text", "Widget")
@@ -45,6 +48,8 @@ Text.color = color.new(255, 255, 255)
 Text.align = "left"
 Text.height = 20
 Text.text = ""
+Text.shadowX = 1
+Text.shadowY = 1
 
 --[[!
 	Constructor function
@@ -65,9 +70,15 @@ end
 function Text:OnDraw()
 	Dharma.Classes.Widget.OnDraw(self)
 	if(self.text) then
-		text.color(self.color)
 		text.size(self.height)
 		local x,y = self:GetScreenPos()
+
+		if(self.shadowColor) then
+			text.color(self.shadowColor)
+			text.draw(x+self.shadowX, y+self.shadowY, self.text, self.align, self.width+self.shadowX)
+		end
+			
+		text.color(self.color)
 		text.draw(x, y, self.text, self.align, self.width)
 	end
 end
@@ -81,6 +92,7 @@ function Text:SetText(msg, ...)
 	self.color = Dharma.Color(...) or self.color
 	self.text = msg or ""
 	self:UpdateScreen()
+	if(self.OnTextChanged) then self:OnTextChanged(msg) end
 end
 
 --[[!
@@ -107,5 +119,16 @@ end
 ]]
 function Text:SetColor(color)
 	self.color = Dharma.Color(color)
+	self:UpdateScreen()
+end
+
+--[[!
+	Sets the text shadow
+	@param color Either a colorString or color-table for the shadow color
+	@param x The shadow x-offset [optional]
+	@param y The shadow y-offset [optional]
+]]
+function Text:SetShadow(color, x, y)
+	self.shadowColor, self.shadowX, self.shadowY = Dharma.Color(color), x, y
 	self:UpdateScreen()
 end
