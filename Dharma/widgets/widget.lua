@@ -383,7 +383,7 @@ function Widget:Loop(waitTime)
 
 		if(screenUpdate) then
 			calcNum = calcNum + 1
-			applyFuncRecursive(self, nil, safeCall, "OnDraw")
+			applyFuncRecursive(screenUpdate == true and self or screenUpdate, nil, safeCall, "OnDraw")
 			screenUpdate = nil
 			screen.update()
 		end
@@ -411,9 +411,10 @@ end
 
 --[[!
 	Schedule a redrawing of the screen on the next iteration
+	@param widget only redraw the specified widget [optional]
 ]]
-function Widget:UpdateScreen()
-	screenUpdate = true
+function Widget:UpdateScreen(widget)
+	screenUpdate = not screenUpdate and widget or true
 end
 
 --[[!
