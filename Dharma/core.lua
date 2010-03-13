@@ -35,17 +35,20 @@
 Dharma = Dharma or {}
 
 local dharmaFiles = {
-	Data = "data",
-	Profiler = "profiler",
 	Colors = "colors",
+	Data = "data",
+	KeyBoard = "widgets/w_Keyboard",
+	Profiler = "profiler",
 
 	Widget = "widgets/widget",
 	Button = "widgets/w_button",
 	CheckBox = "widgets/w_checkbox",
 	Debug = "widgets/debug",
 	Image = "widgets/w_image",
+	KeyBoard = "widgets/w_keyboard",
 	Slider = "widgets/w_slider",
 	Text = "widgets/w_text",
+	TextBox = "widgets/w_textbox",
 }
 
 local classes = {}

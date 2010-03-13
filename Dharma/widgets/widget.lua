@@ -52,6 +52,7 @@ Widget.x = 0
 Widget.y = 0
 Widget.width = screen.width()
 Widget.height = screen.height()
+Widget.margin = 0
 
 
 --[[!
@@ -219,11 +220,12 @@ end
 ]]
 function Widget:OnDraw()
 	local x, y = self:GetScreenPos()
+	local height, width, margin = self.height, self.width, self.margin
 	if(self.borderColor) then
-		screen.drawrect(x-1, y-1, x+self.width, y+self.height, self.borderColor)
+		screen.drawrect(x-1-margin, y-1-margin, x+width+margin, y+height+margin, self.borderColor)
 	end
 	if(self.bgColor) then
-		screen.fillrect(x, y, self.width, self.height, self.bgColor)
+		screen.fillrect(x-margin, y-margin, width+margin*2, height+margin*2, self.bgColor)
 	end
 end
 

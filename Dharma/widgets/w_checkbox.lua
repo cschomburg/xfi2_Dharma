@@ -47,7 +47,7 @@ CheckBox.width = 100
 
 --[[!
 	Constructor
-	@param text The caption of the button [optional]
+	@param msg The label of the checkbox [optional]
 	@param color Either a colorString or color-table for the text color [optional]
 	@param size The size of the box and text [optional]
 	@param checked The initial state of the box [optional]

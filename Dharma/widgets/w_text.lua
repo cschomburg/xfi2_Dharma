@@ -44,6 +44,7 @@ local Text = Dharma.NewClass("Text", "Widget")
 Text.color = color.new(255, 255, 255)
 Text.align = "left"
 Text.height = 20
+Text.text = ""
 
 --[[!
 	Constructor function
@@ -72,13 +73,13 @@ function Text:OnDraw()
 end
 
 --[[!
-	Sets the text and text color of the button
-	@param text The caption of the button [optional]
+	Sets the text and text color
+	@param text The text [optional]
 	@param color Either a colorString or color-table for the text color [optional]
 ]]
 function Text:SetText(msg, ...)
 	self.color = Dharma.Color(...) or self.color
-	self.text = msg
+	self.text = msg or ""
 	self:UpdateScreen()
 end
 
