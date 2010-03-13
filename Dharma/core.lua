@@ -41,6 +41,7 @@ local dharmaFiles = {
 
 	Widget = "widgets/widget",
 	Button = "widgets/w_button",
+	CheckBox = "widgets/w_checkbox",
 	Debug = "widgets/debug",
 	Image = "widgets/w_image",
 	Slider = "widgets/w_slider",

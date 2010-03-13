@@ -36,17 +36,19 @@
 	Creates a clickable text button
 
 	@var color The color of the text [default: white]
-	@var text The displayed text
+	@var bgTextures indexed table holding the three background textures
 ]]
 
-local Button = Dharma.NewClass("Button", "Widget")
-Button.color = color.new(255, 255, 255)
+local Button = Dharma.NewClass("Button", "Text")
+Button:EnableTouch(true, true)
 Button.width = 100
 Button.height = 35
 
-local btnLeft = image.load("Dharma/images/button-left.png")
-local btnMiddle = image.load("Dharma/images/button-middle.png")
-local btnRight = image.load("Dharma/images/button-right.png")
+Button.bgTextures = {
+	image.load("Dharma/images/button-left.png"),
+	image.load("Dharma/images/button-middle.png"),
+	image.load("Dharma/images/button-right.png"),
+}
 
 --[[!
 	Constructor
@@ -54,9 +56,7 @@ local btnRight = image.load("Dharma/images/button-right.png")
 	@param color Either a colorString or color-table for the text color [optional]
 ]]
 function Button:_new(msg, color)
-	Dharma.Classes.Widget._new(self)
-	Button:SetText(msg, color)
-	self:EnableTouch(true, true)
+	Dharma.Classes.Text._new(self, msg, nil, color)
 end
 
 --[[!
@@ -70,9 +70,11 @@ function Button:OnDraw()
 	local endWidth = height/35*11
 	local midWidth = self.width-endWidth*2
 
-	btnLeft:draw(x, y, endWidth, height)
-	btnMiddle:draw(x+endWidth, y, midWidth, height)
-	btnRight:draw(x+endWidth+midWidth, y, endWidth, height)
+	if(self.bgTextures) then
+		self.bgTextures[1]:draw(x, y, endWidth, height)
+		self.bgTextures[2]:draw(x+endWidth, y, midWidth, height)
+		self.bgTextures[3]:draw(x+endWidth+midWidth, y, endWidth, height)
+	end
 
 	if(self.text) then
 		text.color(self.color)
@@ -82,30 +84,19 @@ function Button:OnDraw()
 end
 
 --[[!
-	Sets the text and text color of the button
-	@param text The caption of the button [optional]
-	@param color Either a colorString or color-table for the text color [optional]
+	Sets the background textures of the button
+	@param arg1 An indexed table holding the new images (left, middle, right)
+	@param arg1 The generic image path for textures, Dharma will append "-left.png" and so on
 ]]
-function Button:SetText(msg, color)
-	self.color = Dharma.Color(color) or self.color
-	self.text = msg
-	self:UpdateScreen()
-end
-
---[[!
-	Sets the text by using string.format(format, ...)
-	@param format The format string
-	@param ... The arguments for format
-]]
-function Button:SetFormattedText(msg, ...)
-	self:SetText(msg:format(...))
-end
-
---[[!
-	Sets the text color
-	@param color Either a colorString or color-table for the text color
-]]
-function Button:SetColor(color)
-	self.color = Dharma.Color(color)
+function Button:SetButtonTextures(arg1)
+	if(type(arg1) == "table") then
+		self.bgTextures = arg1
+	elseif(arg1) then
+		self.bgTextures = {
+			image.load(path.."-left.png"),
+			image.load(path.."-middle.png"),
+			image.load(path.."-right.png"),
+		}
+	end
 	self:UpdateScreen()
 end
