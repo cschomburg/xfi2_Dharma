@@ -1,6 +1,6 @@
 --[[
 	This example Dharma app creates:
-	- an image background
+	- an orange background
 	- a movable slider
 	- an editable text box which reflects the slider value
 	- a button to set the current slider value
@@ -11,7 +11,7 @@
 require "Dharma/core"
 
 -- The background serving as our application
-local app = Dharma.New("Image", "background.png")
+local app = Dharma.New("Widget", color.new(255, 128, 0))
 
 -- The text box
 local textbox = app:New("TextBox", "25.2")
