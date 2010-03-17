@@ -128,12 +128,10 @@ end
 	@fn bool = Dharma.IsZen()
 	Returns whether the environment is a real Zen or a simulator
 ]]
-local isZen
+local isZen = debug.traceback():match("a:/")
 function Dharma.IsZen()
-	if(isZen == nil) then
-		isZen = debug.traceback():match("a:/")
-	end
 	return isZen
 end
 
+Dharma.clock = Dharma.IsZen() and os.ostime or os.clock
 Dharma.Classes = classes
